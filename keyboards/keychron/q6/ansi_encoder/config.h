@@ -41,3 +41,6 @@
 
 /* Enable NUM_LOCK_LED_INDEX */
 // #define NUM_LOCK_LED_INDEX 37
+
+// Enable TAP HOLD
+#define TAPPING_TERM 200
