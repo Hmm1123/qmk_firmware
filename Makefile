@@ -37,7 +37,9 @@ endif
 QMK_BIN := qmk
 
 # avoid 'Entering|Leaving directory' messages
-MAKEFLAGS += --no-print-directory
+# commented out because of intelliSense
+# see https://youtrack.jetbrains.com/issue/CPP-24287/CLion-hangs-when-loading-the-QMK-firmware-project
+#MAKEFLAGS += --no-print-directory
 
 ON_ERROR := error_occurred=1
 

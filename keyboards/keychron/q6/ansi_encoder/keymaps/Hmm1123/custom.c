@@ -2,113 +2,84 @@
 // Created by konsti on 22.01.23.
 //
 
-
+#include <unicode/unicode.h>
+#include <process_key_override.h>
 #include "quantum.h"
 #include "action.h"
 
+enum unicode_names { UE_UPPER, UE_LOW, OE_UPPER, OE_LOW, AE_UPPER, AE_LOW };
 
-//enum unicode_names {
-//    UE,
-//    OE,
-//    AE,
-//};
-//
-//const uint32_t unicode_map[] PROGMEM = {
-//    [UE] = 0x1
-//}
-//
-//enum custom_keycodes {
-//    AE = SAFE_RANGE,
-//    OE,
-//    UE,
-//};
-//
-//struct tab_hold{
-//    uint16_t hold_upper;
-//    uint16_t hold_lower;
-//};
-//
-//uint16_t tab_hold_keycodes[][3] = {
-//    {KC_U, "Ü", "ü"}
-//};
-//
-//static uint16_t timers[];
+const uint32_t unicode_map[] PROGMEM = {
+    [AE_LOW] = 0xE4, [AE_UPPER] = 0xC4,
 
-static bool process_tap_or_hold(keyrecord_t *record, char *short_press_keycode_upper, char *short_press_keycode_lower, char *long_press_keycode_upper, char *long_press_keycode_lower){
-    if (record->event.pressed) {
-        if (record->tap.count > 0) { // key was tapped
-            if (get_mods() & MOD_MASK_SHIFT ) {
+    [OE_LOW] = 0xF6, [OE_UPPER] = 0xD6,
 
-                SEND_STRING(short_press_keycode_upper);
-            } else {
-                SEND_STRING(short_press_keycode_lower);
-            }
-        } else { // key was held
-            if (get_mods() & MOD_MASK_SHIFT) {
-                SEND_STRING(long_press_keycode_upper);
-            } else {
-                SEND_STRING(long_press_keycode_lower);
-            }
+    [UE_LOW] = 0xFC, [UE_UPPER] = 0xDC,
+};
+
+static bool process_tab_or_hold_unicode(keyrecord_t* record, char* long_press_unicode_char_lower, char* long_press_unicode_char_upper) {
+    if (record->tap.count == 0 && record->event.pressed) {
+        // Key is being held.
+        if (get_mods() & (MOD_BIT(KC_LEFT_SHIFT) | MOD_BIT(KC_RIGHT_SHIFT))) {
+            send_unicode_string(long_press_unicode_char_upper);
+        } else {
+            send_unicode_string(long_press_unicode_char_lower);
         }
+        return false; // Skip default handling.
     }
-    return false;
-    //    if (timers[event_keycode]+TAPPING_TERM > record->time){
-    //// This is a long press (aka hold)
-    //
-    //    }else{
-    //        unregister_code(short_press_keycode);
-    //    }
-    //    return false;
+    return true; // Continue default handling.
 }
 
-/**
- * If we dont want to distinguish between upper and lower case keycodes
- * @param record
- * @param short_press_keycode
- * @param long_press_keycode
- * @return
- */
 /*
-static bool process_tab_or_hold(keyrecord_t *record, char *short_press_keycode, char *long_press_keycode){
-return process_tap_or_hold(record, short_press_keycode, short_press_keycode, long_press_keycode, long_press_keycode);
+static bool process_tap_or_hold(keyrecord_t* record, uint16_t long_press_keycode) {
+    if (record->tap.count == 0 && record->event.pressed) {
+        // Key is being held.
+        tap_code16(long_press_keycode);
+        return false; // Skip default handling.
+    }
+    return true; // Continue default handling.
 }
 */
 
-//static bool process_tap_or_hold(keyrecord_t *record, uint16_t event_keycode, uint16_t long_press_keycode){
-//    return process_tap_or_hold(record, event_keycode, event_keycode, long_press_keycode);
-//}
+// Key Overrides - see https://github.com/qmk/qmk_firmware/blob/master/docs/feature_key_overrides.md
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+// const key_override_t  next_unicode_mode_override = ;
+//
+// const key_override_t ** key_overrides = (const key_override_t *[]){
+//     &next_unicode_mode_override,
+//     NULL
+// };
+
+#define KC_U_UE LT(0, KC_U)
+#define KC_O_OE LT(0, KC_O)
+#define KC_A_AE LT(0, KC_A)
+#define KC_S_SZ LT(0, KC_S)
+
+#define QK_UNICODE_MODE_NEXT_VIA_KEYCODE USER11
+
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     switch (keycode) {
-        case KC_U:
-            return process_tap_or_hold(record, "U", "u", "Ü","ü");
-        case KC_A:
-            return process_tap_or_hold(record, "A", "a", "Ä","ä");
-        case KC_O:
-            return process_tap_or_hold(record, "O", "o", "Ö","ö");
+        case KC_O_OE:
+            return process_tab_or_hold_unicode(record, "ö", "Ö");
+        case KC_U_UE:
+            return process_tab_or_hold_unicode(record, "ü", "Ü");
+        case KC_A_AE:
+            return process_tab_or_hold_unicode(record, "ä", "Ä");
+        case KC_S_SZ:
+            return process_tab_or_hold_unicode(record, "ß", "ß");
+        case QK_UNICODE_MODE_NEXT_VIA_KEYCODE:
+            if (record->event.pressed) {
+                cycle_unicode_input_mode(1);
+            }
+            return false;
         default:
-            return true; // Process all other keycodes normally
-
-            //        case AE:
-            //            if (record->event.pressed) {
-            //                timers[keycode] = recode->time;
-            //            } else {
-            //                return process_tap_or_hold(record, keycode, KC_E);
-            //            }
-            //        case OE:
-            //            // Play a tone when enter is pressed
-            //            if (record->event.pressed) {
-            //                timers[keycode] = recode->time
-            ////                PLAY_SONG(tone_qwerty);
-            //            }else{
-            //
-            //                return process_tap_or_hold(record, keycode, KC_E);
-            //            }
-            //        case UE:
-            //            if (record->event.pressed) {
-            //                timers[UE] = recode->time;
-            //            } else {
-            //                return process_tap_or_hold(record, keycode, KC_E);
-            //            }
+            return true;
     }
 }
+
+// RGB
+#ifdef RGB_MATRIX_ENABLE
+void keyboard_post_init_user(void) {
+    rgblight_mode_noeeprom(RGB_MATRIX_CUSTOM_CYCLE_LEFT_RIGHT_REACTIVE_MULTINEXUS);
+}
+#endif

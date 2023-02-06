@@ -33,7 +33,12 @@ PRINT_ERROR_PLAIN = ($(SILENT) ||printf " $(ERROR_STRING)" | $(AWK_STATUS)) && $
 PRINT_WARNING_PLAIN = ($(SILENT) || printf " $(WARN_STRING)" | $(AWK_STATUS)) && $(TAB_LOG_PLAIN)
 PRINT_SKIPPED_PLAIN = ($(SILENT) || printf " $(SKIPPED_STRING)" | $(AWK_STATUS))
 PRINT_OK = $(SILENT) || printf " $(OK_STRING)" | $(AWK_STATUS)
-BUILD_CMD = LOG=$$($(CMD) 2>&1) ; if [ $$? -gt 0 ]; then $(PRINT_ERROR); elif [ "$$LOG" != "" ] ; then $(PRINT_WARNING); else $(PRINT_OK); fi;
+# CHANGE START
+# changed because of intellisense
+# see https://youtrack.jetbrains.com/issue/CPP-24287/CLion-hangs-when-loading-the-QMK-firmware-project
+#BUILD_CMD = LOG=$$($(CMD) 2>&1) ; if [ $$? -gt 0 ]; then $(PRINT_ERROR); elif [ "$$LOG" != "" ] ; then $(PRINT_WARNING); else $(PRINT_OK); fi;
+BUILD_CMD = $(CMD)
+# CHANGE END
 MAKE_MSG_FORMAT = $(AWK) '{ printf "%-118s", $$0;}'
 
 # The UNSYNC_OUTPUT_CMD command disables the `--output-sync` for the current command, if the `--output-sync` granularity is `target` or lower.
