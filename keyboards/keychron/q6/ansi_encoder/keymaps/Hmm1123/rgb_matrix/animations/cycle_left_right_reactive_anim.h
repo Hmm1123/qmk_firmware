@@ -15,7 +15,8 @@ RGB_MATRIX_EFFECT(CYCLE_LEFT_RIGHT_REACTIVE_NEXUS)
 #            endif // ENABLE_RGB_MATRIX_CYCLE_LEFT_RIGHT_REACTIVE_NEXUS
 
 #            ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
-//#                include "rgb_matrix/animations/runners/effect_runner_i_and_reactive.h" // not needed because already imported in custom rgb_matrix.h
+// #                include "rgb_matrix/animations/runners/effect_runner_i_and_reactive.h"
+#                include "rgb_matrix/animations/runners/rgb_matrix_runners.inc"
 #                include "../rgb_matrix_custom.h"
 
 // default values for bg color range
@@ -54,7 +55,7 @@ static HSV CYCLE_LEFT_RIGHT_REACTIVE_reactive_math(HSV hsv, uint16_t dx, uint16_
     if ((dx < -max_dist_row_col || dx > max_dist_row_col) && (dy < -max_dist_row_col || dy > max_dist_row_col)) effect = 255;
 #                undef max_dist_row_col
 #                ifdef RGB_MATRIX_SOLID_REACTIVE_GRADIENT_MODE
-    hsv.h = scale16by8(g_rgb_timer, add8(rgb_matrix_config.speed, 1) >> 6);
+    hsv.h = scale16by8(g_rgb_timer, add8(rgb_matrix_get_reactive_speed_scaled(), 1) >> 6);
 #                endif
     hsv.v = qadd8(hsv.v, 255 - effect);
     hsv.h = rgb_matrix_config.hsv.h + dy / 4;

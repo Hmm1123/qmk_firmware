@@ -48,6 +48,9 @@
 // Unicode mode
 #define UNICODE_SELECTED_MODES UNICODE_MODE_LINUX, UNICODE_MODE_WINCOMPOSE
 
+// Enable custom eeconfig
+#define CUSTOM_USER_EECONFIG
+
 // RGB
 #define RGB_MATRIX_BG_REACTIVE_EFFECT
 // custom RGB effect

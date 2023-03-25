@@ -20,6 +20,9 @@
 #include "matrix.h"
 #include "keymap.h"
 
+// CUSTOM CODE BY Hmm1123
+#include <tap_hold.h>
+
 #ifdef BACKLIGHT_ENABLE
 #    include "backlight.h"
 #endif

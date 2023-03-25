@@ -224,6 +224,9 @@ void post_process_record_quantum(keyrecord_t *record) {
 bool process_record_quantum(keyrecord_t *record) {
     uint16_t keycode = get_record_keycode(record, true);
 
+    // CUSTOM CODE ADDED BY Hmm1123
+    process_record_quantum_custom(record, keycode);
+
     // This is how you use actions here
     // if (keycode == QK_LEADER) {
     //   action_t action;
