@@ -9,7 +9,7 @@ static void via_custom_save(void) {
 #ifdef CUSTOM_USER_EECONFIG
     write_user_eeprom_data_to_eeprom();
 #else
-    dprintf("called via_custom_save but custom user eeconfig isn't activated. Nothing will get saved to eeconfig. Please #define CUSTOM_USER_EECONFIG in config.h");
+    dprintln("called via_custom_save but custom user eeconfig isn't activated. Nothing will get saved to eeconfig. Please #define CUSTOM_USER_EECONFIG in config.h");
 #endif
 }
 

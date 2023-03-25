@@ -1,3 +1,4 @@
+#include <rgb_matrix/rgb_matrix_custom.h>
 #include "action_tapping.h"
 #include "quantum.h"
 #include "tap_hold.h"
@@ -81,23 +82,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     }
 }
 
-// const char* via_default_config =
-// #include "via_settings_v1.3.json"
-//     ;
-
-// void via_init(void) {
-//     via_read_settings();
-// }
-
-void matrix_init_user(void) {
-    via_init();
-}
+//void matrix_init_user(void) {
+//    via_init();
+//}
 
 // RGB
-#ifdef RGB_MATRIX_ENABLE
+#if defined( RGB_MATRIX_ENABLE) || defined(CUSTOM_USER_EECONFIG)
 void keyboard_post_init_user(void) {
     rgblight_mode_noeeprom(RGB_MATRIX_CUSTOM_CYCLE_LEFT_RIGHT_REACTIVE_MULTINEXUS);
+    reset_user_config();
+#ifdef CUSTOM_USER_EECONFIG
     keyboard_post_init_user_eeconfig();
+#endif
     debug_enable = true;
 }
 #endif

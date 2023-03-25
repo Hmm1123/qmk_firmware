@@ -8,7 +8,7 @@ rgb_custom_config_t* rgb_custom_config_ptr = &(user_data.rgb_config);
 
 // speed helpers
 #ifdef RGB_MATRIX_BG_REACTIVE_EFFECT
-void rgb_custom_config_eeconfig_init(void) {
+void reset_rgb_custom_config(void) {
     rgb_custom_config_ptr->background_speed = RGB_MATRIX_BG_REACTIVE_DEFAULT_BG_SPEED;
     rgb_custom_config_ptr->reactive_speed   = RGB_MATRIX_BG_REACTIVE_DEFAULT_REACTIVE_SPEED;
 }
@@ -24,7 +24,7 @@ void rgb_matrix_set_custom_speed_eeprom_helper(uint8_t speed, bool write_to_eepr
         write_user_eeprom_data_to_eeprom();
     }
 #endif
-    dprintf("rgb matrix set CUSTOM %s speed [%s]: %u\n", bg ? "background" : "reactive", (write_to_eeprom) ? "EEPROM" : "NOEEPROM", bg ? rgb_custom_config_ptr->background_speed : rgb_custom_config_ptr->reactive_speed);
+    dprintf("rgb matrix set CUSTOM %s speed [%s]: %u\n", (bg ? "background" : "reactive"), (write_to_eeprom ? "EEPROM" : "NOEEPROM"), (bg ? rgb_custom_config_ptr->background_speed : rgb_custom_config_ptr->reactive_speed));
 }
 
 // set bg speed

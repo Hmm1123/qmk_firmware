@@ -13,7 +13,7 @@ extern rgb_custom_config_t* rgb_custom_config_ptr;
 
 // speed helpers
 #ifdef RGB_MATRIX_BG_REACTIVE_EFFECT
-void rgb_custom_config_eeconfig_init(void);
+void reset_rgb_custom_config(void);
 
 // default speed
 #ifndef RGB_MATRIX_BG_REACTIVE_DEFAULT_BG_SPEED

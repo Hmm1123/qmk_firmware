@@ -14,4 +14,6 @@ typedef union {
 // globals
 extern user_data_t user_data;
 
+void reset_user_config(void);
+
 #endif // QMK_FIRMWARE_USER_DATA_H
